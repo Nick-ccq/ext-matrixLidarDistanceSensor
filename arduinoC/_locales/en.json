@@ -1,0 +1,14 @@
+{
+    "matrixLidarDistanceSensor.laserrangingSensorInit|block": "Initialize the I2C address [ADDRESS] of the laserranging sensor in [MATRIX]",
+    "matrixLidarDistanceSensor.acquireObstacleData|block": "Acquire obstacle avoidance data",
+    "matrixLidarDistanceSensor.setObstacleDistance|block": "Customize the obstacle avoidance distance to [DISTANCE] (mm)",
+    "matrixLidarDistanceSensor.obstacleSuggestion|block": "Direction indication in obstacle avoidance mode",
+    "matrixLidarDistanceSensor.getObstacleDistance|block": "Distance detection in obstacle avoidance mode [SIDE] (mm)",
+    "matrixLidarDistanceSensor.matrixPointOutput|block": "[ADDRESS] Measure the distance of the specified point in matrix mode x: [X] y: [Y] (mm)",
+
+    "matrixLidarDistanceSensor.MATRIX.ObstacleAvoidance|menu": "Obstacle Avoidance",
+    "matrixLidarDistanceSensor.MATRIX.Matrix|menu": "Matrix",
+    "matrixLidarDistanceSensor.SIDE.Left|menu": "Left",
+    "matrixLidarDistanceSensor.SIDE.Front|menu": "Front",
+    "matrixLidarDistanceSensor.SIDE.Right|menu": "Right"
+}

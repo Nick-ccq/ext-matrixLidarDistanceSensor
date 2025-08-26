@@ -1,0 +1,14 @@
+{
+    "matrixLidarDistanceSensor.laserrangingSensorInit|block": "初始化激光测距传感器 I2C地址 [ADDRESS] 模式 [MATRIX]",
+    "matrixLidarDistanceSensor.acquireObstacleData|block": "获取避障数据",
+    "matrixLidarDistanceSensor.setObstacleDistance|block": "避障模式自定义避障距离 [DISTANCE]（mm）",
+    "matrixLidarDistanceSensor.obstacleSuggestion|block": "避障模式 方向提示",
+    "matrixLidarDistanceSensor.getObstacleDistance|block": "避障模式 距离检测 [SIDE] (mm)",
+    "matrixLidarDistanceSensor.matrixPointOutput|block": "[ADDRESS] 矩阵模式 指定点测距 x: [X] y: [Y] (mm)",
+
+    "matrixLidarDistanceSensor.MATRIX.ObstacleAvoidance|menu": "避障模式",
+    "matrixLidarDistanceSensor.MATRIX.Matrix|menu": "矩阵模式",
+    "matrixLidarDistanceSensor.SIDE.Left|menu": "左侧",
+    "matrixLidarDistanceSensor.SIDE.Front|menu": "前方",
+    "matrixLidarDistanceSensor.SIDE.Right|menu": "右侧"
+}

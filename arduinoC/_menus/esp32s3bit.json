@@ -1,0 +1,26 @@
+{
+	"ADDRESS": {
+		"menu":	[
+			["0x33", "0x33"], 
+			["0x32", "0x32"],
+			["0x31", "0x31"],
+			["0x30", "0x30"]
+		],
+		"default_laserrangingSensorInit": "0x33"
+	},
+	"MATRIX": {
+		"menu":	[
+			["ObstacleAvoidance", "ObstacleAvoidance"], 
+			["Matrix", "Matrix"]
+		],
+		"default_laserrangingSensorInit": "ObstacleAvoidance"
+	},
+	"SIDE": {
+		"menu":	[
+			["Left", "Left"], 
+			["Front", "Front"], 
+			["Right", "Right"]
+		],
+		"default_getObstacleDistance": "Left"
+	}
+}
