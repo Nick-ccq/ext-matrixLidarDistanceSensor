@@ -1,24 +1,28 @@
 {
 	"ADDRESS": {
-		"menu":	[
-			["0x33", "0x33"], 
+		"menu": [
+			["0x33", "0x33"],
 			["0x32", "0x32"],
 			["0x31", "0x31"],
 			["0x30", "0x30"]
 		],
-		"default_laserrangingSensorInit": "0x33"
+		"default_laserrangingSensorInit": "0x33",
+		"default_setObstacleDistance": "0x33",
+		"default_obstacleSuggestion": "0x33",
+		"default_getObstacleDistance": "0x33",
+		"default_matrixPointOutput": "0x33"
 	},
 	"MATRIX": {
-		"menu":	[
-			["ObstacleAvoidance", "ObstacleAvoidance"], 
-			["Matrix", "Matrix"]
+		"menu": [
+			["Matrix", "Matrix"],
+			["ObstacleAvoidance", "ObstacleAvoidance"]
 		],
-		"default_laserrangingSensorInit": "ObstacleAvoidance"
+		"default_laserrangingSensorInit": "Matrix"
 	},
 	"SIDE": {
-		"menu":	[
-			["Left", "Left"], 
-			["Front", "Front"], 
+		"menu": [
+			["Left", "Left"],
+			["Front", "Front"],
 			["Right", "Right"]
 		],
 		"default_getObstacleDistance": "Left"

@@ -5,8 +5,8 @@
     "en": "8*8 Matrix Laser Ranging Sensor"
   },
   "description": {
-    "zh-cn": "这是一款 8x8 矩阵式激光测距传感器模块。它能够在20mm-3500mmm范围内同时测量 64 个点的距离。",
-    "zh-tw": "這是一款 8x8 矩陣式激光測距傳感器模塊。它能夠在20mm-3500mmm範圍內同時測量 64 個點的距離。",
+    "zh-cn": "这是一款 8x8 矩阵式激光测距传感器模块。它能够在20mm-3500mm范围内同时测量 64 个点的距离。",
+    "zh-tw": "這是一款 8x8 矩陣式激光測距傳感器模塊。它能夠在20mm-3500mm範圍內同時測量 64 個點的距離。",
     "en": "This is an 8x8 matrix laser ranging sensor module. It can simultaneously measure the distances of 64 points within the range of 20mm to 3500mm."
   },
   "author": "DFRobot",
@@ -19,13 +19,27 @@
     "mac",
     "web"
   ],
-  "version": "0.0.2",
+  "version": "0.1.0",
   "asset": {
     "arduinoC": {
       "dir": "arduinoC/",
-      "version": "0.0.1",
-      "board": [ "microbit", "esp32s3bit"],
+      "version": "0.0.3",
+      "board": [
+        "microbit",
+        "esp32s3bit",
+        "arduino",
+        "esp32",
+        "arduinonano",
+        "leonardo",
+        "mega2560"
+      ],
       "main": "main.ts"
+    },
+    "python": {
+      "dir": "python/",
+      "main": "main.ts",
+      "dependencies": {
+        }
     }
   }
 }

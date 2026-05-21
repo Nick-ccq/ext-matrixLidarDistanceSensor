@@ -1,15 +1,15 @@
 /*!
- * @file DFRobot_matrixLidarDistanceSensor.h
- * @brief This is the method documentation file for DFRobot_matrixLidarDistanceSensor
+ * @file DFRobot_MatrixLidar.h
+ * @brief This is the method documentation file for DFRobot_MatrixLidar
  * @copyright   Copyright (c) 2024 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license     The MIT License (MIT)
  * @author [TangJie](jie.tang@dfrobot.com)
  * @version  V1.0
- * @date  2023-12-7
- * @url https://github.com/DFRobot/DFRobot_matrixLidarDistanceSensor
+ * @date  2025-04-03
+ * @url https://github.com/DFRobot/DFRobot_MatrixLidar
  */
-#ifndef _DFROBOT_MATRIXLIDARDISTANCESENSOR_1_H_
-#define _DFROBOT_MATRIXLIDARDISTANCESENSOR_1_H_
+#ifndef _DFROBOT_MATRIXLIDAR_H_
+#define _DFROBOT_MATRIXLIDAR_H_
 #include "Arduino.h"
 #include "Wire.h"
 
@@ -20,32 +20,29 @@
 #define DBG(...)
 #endif
 
- /**
-  * @brief Select to get the obstacle position.
-  */
-typedef enum{
-    eLeft, 
-    eMiddle,
-    eRight,
-}eDir_t;
-
 /**
  * @brief matrix selection
  */
 typedef enum{
-    eObstacle = 4,
-    eMatrix = 8,
+  eMatrix_4x4  = 4,
+  eMatrix_8X8  = 8,
 }eMatrix_t;
 
-class DFRobot_matrixLidarDistanceSensor{
+typedef enum{
+  eLeft,
+  eMiddle,
+  eRight,
+}eDir_t;
+
+class DFRobot_MatrixLidar{
 public:
     
   /**
-   * @fn DFRobot_matrixLidarDistanceSensor
+   * @fn DFRobot_MatrixLidar
    * @brief Constructor for the TOF sensor
    * @param pWire Communication protocol initialization
    */
-  DFRobot_matrixLidarDistanceSensor(void);
+  DFRobot_MatrixLidar(void);
   
   /**
    * @fn begin
@@ -55,21 +52,14 @@ public:
   uint8_t begin(void);
 
   /**
-   * @fn getAllDataConfig
+   * @fn setRangingMode
    * @brief Configures the retrieval of all data
    * @param matrix Configuration matrix for sensor sampling
    * @return Returns the configuration status
    * @retval 0 Success
    * @retval 1 Failure
    */
-  uint8_t getAllDataConfig(uint8_t addr, eMatrix_t matrix);
-
-  /**
-   * @fn configAvoidance
-   * @brief Initializes obstacle avoidance
-   * @param wall Configures the obstacle avoidance distance, in centimeters
-   */
-  uint8_t configAvoidance(uint16_t wall);
+  uint8_t setRangingMode(eMatrix_t matrix);
 
   /**
    * @fn getAllData
@@ -81,41 +71,18 @@ public:
   /**
    * @fn getFixedPointData
    * @brief Retrieves data for a specific point
-   * @param addr Address of the sensor
    * @param x X coordinate
    * @param y Y coordinate
    * @return Returns the retrieved data
    */
-  uint16_t getFixedPointData(uint8_t addr,uint8_t x, uint8_t y);
+  uint16_t getFixedPointData(uint8_t x, uint8_t y);
 
-  /**
-   * @fn requestObstacleSensorData
-   * @brief Requests obstacle avoidance data
-   * @return Returns the retrieval status
-   */
+  uint8_t setObstacleMode(void);
+  uint8_t configAvoidance(uint16_t wall);
   uint8_t requestObstacleSensorData(void);
-
-  /**
-   * @fn getDir
-   * @brief Retrieves obstacle avoidance direction suggestions
-   * @return Returns the avoidance suggestions
-   */
   uint8_t getDir(void);
-
-  /**
-   * @fn getEmergencyFlag
-   * @brief Retrieves the emergency obstacle avoidance flag
-   * @return Returns the obstacle avoidance flag
-   */
-  uint8_t getEmergencyFlag(void);
-
-  /**
-   * @fn getDistance
-   * @brief Retrieves the distance
-   * @return Returns the distance
-   */
   uint16_t getDistance(eDir_t dir);
-  uint8_t _addr;
+
 protected:
   /**
    * @fn recvPacket
@@ -127,7 +94,8 @@ protected:
    * @n      NULL    indicates receiving packet failed
    * @n      Non-NULL  response packet pointer
    */
-  void* recvPacket(uint8_t addrData, uint8_t cmd, uint8_t *errorCode);
+  void* recvPacket(uint8_t cmd, uint8_t *errorCode);
+
   /**
    * @fn init
    * @brief Pure virtual function, interface init
@@ -139,58 +107,99 @@ protected:
    * @n      -2    Device does not exist
    */
   virtual int init(void) = 0;
+
   /**
    * @fn sendPacket
    * @brief I2C interface init
    * 
-   * @param addr    Address of the sensor
    * @param pkt    Set I2C communication frequency
    * @param length Set I2C communication frequency
    * @param stop   
    * @n     true   Stop
    * @n     false  Not stop
    */
-  virtual void sendPacket(uint8_t addr, void *pkt, int length, bool stop) = 0;
+  virtual void sendPacket(void *pkt, int length, bool stop) = 0;
+  
   /**
    * @fn recvData
    * @brief I2C interface init
    * 
-   * @param addr    Address of the sensor
    * @param data    Store the received data cache
    * @param len     Byte number to be read
    * @return Actually read byte number    
    */
-  virtual int recvData(uint8_t addr, void *data, int len) = 0;
+  virtual int recvData(void *data, int len) = 0;
     
 private:
     uint32_t _timeout; ///< Time of receive timeout
     
 };
 
-class DFRobot_matrixLidarDistanceSensor_I2C:public DFRobot_matrixLidarDistanceSensor{
+class DFRobot_MatrixLidar_I2C:public DFRobot_MatrixLidar{
 public:
 
-  DFRobot_matrixLidarDistanceSensor_I2C(uint8_t addr = 0x30, TwoWire *pWire = &Wire);
-  ~DFRobot_matrixLidarDistanceSensor_I2C();
+  DFRobot_MatrixLidar_I2C(uint8_t addr = 0x33, TwoWire *pWire = &Wire);
+  ~DFRobot_MatrixLidar_I2C();
+
+  /**
+   * @fn fetchObstacleData
+   * @brief Fetch obstacle avoidance data from the sensor at the current I2C address
+   */
+  uint8_t fetchObstacleData(void);
+
+  /**
+   * @fn fetchMatrixData
+   * @brief Fetch full matrix data from the sensor at the given I2C address
+   * @param addr I2C address (e.g. 0x30~0x33)
+   * @param buf  uint16_t buffer, at least 64 elements for 8x8 mode
+   */
+  uint8_t fetchMatrixData(uint8_t addr, void *buf);
+
+  /**
+   * @fn setRangingModeAt
+   * @brief Configure 8x8 matrix mode on sensor at the given I2C address
+   */
+  uint8_t setRangingModeAt(uint8_t addr, eMatrix_t matrix);
+
+  /**
+   * @fn getMatrixPoint
+   * @brief Read point (x,y) from buffer filled by the last fetchMatrixData()
+   */
+  uint16_t getMatrixPoint(uint8_t x, uint8_t y);
+
+  /**
+   * @fn isDeviceReady
+   * @brief Check if a device responds at the given I2C address
+   */
+  uint8_t isDeviceReady(uint8_t addr);
+
+  /**
+   * @fn getFixedPointDataAt
+   * @brief Fetch full 8x8 matrix from addr internally, then return distance at (x, y) in mm
+   */
+  uint16_t getFixedPointDataAt(uint8_t addr, uint8_t x, uint8_t y);
+
 private:
   TwoWire *_pWire;
+  uint8_t _addr;
   int init(void);
-  void sendPacket(uint8_t addr, void *pkt, int length, bool stop);
-  int recvData(uint8_t addr, void *data, int len);
+  void sendPacket(void *pkt, int length, bool stop);
+  int recvData(void *data, int len);
+  uint8_t fetchMatrixDataAtAddr(uint8_t addr, void *buf);
 
 };
 
-// class DFRobot_matrixLidarDistanceSensor_UART:public DFRobot_matrixLidarDistanceSensor{
-// public:
-//   DFRobot_matrixLidarDistanceSensor_UART(Stream *s);
-//   ~DFRobot_matrixLidarDistanceSensor_UART();
-// private:
-//   uint8_t _state = 0;
-//   Stream *_s;
-//   int init(void);
-//   void sendPacket(uint8_t addr, void *pkt, int length, bool stop = true);
-//   int recvData(uint8_t addr, void *data, int len);
+class DFRobot_MatrixLidar_UART:public DFRobot_MatrixLidar{
+public:
+  DFRobot_MatrixLidar_UART(Stream *s);
+  ~DFRobot_MatrixLidar_UART();
+private:
+  uint8_t _state = 0;
+  Stream *_s;
+  int init(void);
+  void sendPacket(void *pkt, int length, bool stop = true);
+  int recvData(void *data, int len);
   
-// };
+};
 
 #endif

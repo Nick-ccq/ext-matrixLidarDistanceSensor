@@ -1,7 +1,9 @@
 ﻿//% color="#098eff" iconWidth=35 iconHeight=30
 namespace matrixLidarDistanceSensor {
     function ensureInclude() {
-        Generator.addInclude('DFRobot_MatrixLidar.h', '#include <DFRobot_MatrixLidar.h>');
+        Generator.addImport('import time');
+        Generator.addImport('from pinpong.board import Board');
+        Generator.addImport('from DFRobot_matrixLidar import *');
     }
 
     function getTofObjectName(addr: string) {
@@ -19,21 +21,23 @@ namespace matrixLidarDistanceSensor {
         }
     }
 
-    function ensureMatrixTof(addr: string) {
+    function ensureTof(addr: string) {
         let obj = getTofObjectName(addr);
         ensureInclude();
-        Generator.addObject(`DFRobot_MatrixLidar_I2C_${obj}`, 'DFRobot_MatrixLidar_I2C', `${obj}(${addr});`);
-        Generator.addSetup(`${obj}.begin`, `while(${obj}.begin() != 0);`);
-        Generator.addSetup(`${obj}.setRangingMode`, `while(${obj}.setRangingMode(eMatrix_8X8) != 0) { delay(1000); }`);
+        Generator.addCode( `${obj} = DFRobot_matrixLidar_i2c(${addr})`);
+        Generator.addCode( `while ${obj}.begin() != 0:\n    time.sleep(1)`);
+        return obj;
+    }
+
+    function ensureMatrixTof(addr: string) {
+        let obj = ensureTof(addr);
+        Generator.addCode(`while ${obj}.set_Ranging_Mode(8) != 0:\n    time.sleep(1)`);
         return obj;
     }
 
     function ensureObstacleTof(addr: string) {
-        let obj = getTofObjectName(addr);
-        ensureInclude();
-        Generator.addObject(`DFRobot_MatrixLidar_I2C_${obj}`, 'DFRobot_MatrixLidar_I2C', `${obj}(${addr});`);
-        Generator.addSetup(`${obj}.begin`, `while(${obj}.begin() != 0);`);
-        Generator.addSetup(`${obj}.setObstacleMode`, `while(${obj}.setObstacleMode() != 0) { delay(1000); }`);
+        let obj = ensureTof(addr);
+        Generator.addCode(`while ${obj}.set_obstacle_mode() != 0:\n    time.sleep(1)`);
         return obj;
     }
 
@@ -56,14 +60,14 @@ namespace matrixLidarDistanceSensor {
         let addr = parameter.ADDRESS.code;
         let distance = parameter.DISTANCE.code;
         let obj = ensureObstacleTof(addr);
-        Generator.addCode(`${obj}.configAvoidance(${distance});`);
+        Generator.addCode(`${obj}.config_avoidance(${distance})`);
     }
     //% block="[ADDRESS] Obstacle avoidance direction hint" blockType="reporter"
     //% ADDRESS.shadow="dropdown" ADDRESS.options="ADDRESS"
     export function obstacleSuggestion(parameter: any, block: any) {
         let addr = parameter.ADDRESS.code;
-        let obj = ensureObstacleTof(addr);
-        Generator.addCode([`${obj}.getDir()`, Generator.ORDER_UNARY_POSTFIX]);
+        let obj = getTofObjectName(addr);
+        Generator.addCode([`${obj}.get_dir()`, Generator.ORDER_UNARY_POSTFIX]);
     }
 
     //% block="[ADDRESS] Obstacle avoidance distance [SIDE] (mm)" blockType="reporter"
@@ -72,9 +76,9 @@ namespace matrixLidarDistanceSensor {
     export function getObstacleDistance(parameter: any, block: any) {
         let addr = parameter.ADDRESS.code;
         let side = parameter.SIDE.code;
-        side = side === 'Left' ? "eLeft" : side === 'Front' ? "eMiddle" : "eRight";
-        let obj = ensureObstacleTof(addr);
-        Generator.addCode([`${obj}.getDistance(${side})`, Generator.ORDER_UNARY_POSTFIX]);
+        side = side === 'Left' ? "ELEFT" : side === 'Front' ? "EMIDDLE" : "ERIGHT";
+        let obj = getTofObjectName(addr);
+        Generator.addCode([`${obj}.get_distance(${side})`, Generator.ORDER_UNARY_POSTFIX]);
     }
     //% block="---" blockType="tag"
     export function tag1() {}
@@ -87,7 +91,7 @@ namespace matrixLidarDistanceSensor {
         let addr = parameter.ADDRESS.code;
         let x = parameter.X.code;
         let y = parameter.Y.code;
-        let obj = ensureMatrixTof(addr);
-        Generator.addCode([`${obj}.getFixedPointData(${x}, ${y})`, Generator.ORDER_UNARY_POSTFIX]);
+        let obj = getTofObjectName(addr);
+        Generator.addCode([`${obj}.get_fixed_point_data(${x}, ${y})`, Generator.ORDER_UNARY_POSTFIX]);
     }
 }
